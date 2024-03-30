@@ -12,15 +12,16 @@ import pyttsx3
 import mysql.connector
 from pdf_mail import sendpdf
 from fpdf import FPDF
-     
-treatment=[]
-causes=[]
-dieases=[]  
-details=[]
-personal=[]
-#  name ,id , email , age ,gender ,emotion
-result=""
 
+
+class UserData:
+    def __init__(self):
+        self.treatment = []
+        self.causes = []
+        self.dieases = []  
+        self.details = []
+        self.personal = []
+        self.result=""
 
 class Login:
      
@@ -30,12 +31,10 @@ class Login:
         self.root.geometry("1380x720+0+0")
         def fillname():
             text=text1.get(1.0,END)
-            if(len(text)==1):return True
-            
+            if(len(text) <= 0):return True
         def validate_email():
         
             if(fillname()) :
-                
                 messagebox.showwarning("Missing Statements","Please Provide All the Details")
                 text2.delete(1.0,END)
                 return 
@@ -47,11 +46,10 @@ class Login:
                 text2.delete(1.0,END)
             else:
                 messagebox.showinfo("Get OTP","Getting otp from your registered Email")
-                personal.append(text1.get(1.0,END))
-                personal.append(generateID())
-                personal.append(text)
+                Dt.personal.append(text1.get(1.0,END))
+                Dt.personal.append(generateID())
+                Dt.personal.append(text)
                 send_email()
-
 
         def generate_otp():
             str="abcdefghijklmnipqrstuvwxyx0123456789"
@@ -74,7 +72,6 @@ class Login:
                 self.email=text2.get(1.0,END)
                 messagebox.showinfo("Successfully Registered","Welcome to our Application")
                 submit_button.place(x=670,y=570)
-            
             else:
                 messagebox.showerror("Invalid otp","Please enter the Correct OTP")
                 text3.delete(1.0,END)
@@ -91,8 +88,7 @@ class Login:
             password=generate_otp()
             send_email=str(text2.get(1.0,END))
             s.sendmail("arun1772003@gmail.com",send_email,password)
-            s.quit()          
-                    
+            s.quit()                            
         def generateID():
             st="AshmapID"
             coll="0123456789"
@@ -100,16 +96,13 @@ class Login:
                 st+=coll[random.randrange(0,len(coll),3)]
             return st    
                    
-
         main=customtkinter.CTk()
         customtkinter.set_appearance_mode("dark")
                                  
         customtkinter.set_appearance_mode("dark")
         bg=customtkinter.CTkImage(dark_image=Image.open("images/backu1.png"),size=(1380,720))
 
-        back_img=customtkinter.CTkLabel(self.root,image=bg,text="",fg_color="#111").place(relx=0.5,rely=0.5,anchor=CENTER)
-
-                
+        back_img=customtkinter.CTkLabel(self.root,image=bg,text="",fg_color="#111").place(relx=0.5,rely=0.5,anchor=CENTER)     
         fr_color="#111"
         frame=customtkinter.CTkFrame(self.root,width=750,height=400,border_color="yellow",fg_color=fr_color,border_width=10).place(x=350,y=130,anchor=NW)
         
@@ -125,47 +118,34 @@ class Login:
         text2=Text(self.root,font=("Consolas",20,"bold"),bg="black",fg="yellow",relief=GROOVE,wrap=WORD)
         text2.place(x=630,y=290,width=350,height=32)
 
-
         text3=Text(self.root,font=("Consolas",20,"bold"),bg="black",fg="yellow",relief=GROOVE,wrap=WORD)
         text3.place(x=630,y=380,width=350,height=32)
 
-
-
-        button2=customtkinter.CTkButton(self.root,text="Generate OTP",command=validate_email,font=("Consolas",15,"bold"),text_color="white",fg_color="red",hover_color="green",
+        get_button=customtkinter.CTkButton(self.root,text="Generate OTP",command=validate_email,font=("Consolas",15,"bold"),text_color="white",fg_color="red",hover_color="green",
         corner_radius=8).place(x=740,y=342)
 
-
-        button3=customtkinter.CTkButton(self.root,text="Verify OTP",command=verify_otp,font=("Consolas",15,"bold"),text_color="white",fg_color="red",hover_color="green",
+        verify_button=customtkinter.CTkButton(self.root,text="Verify OTP",command=verify_otp,font=("Consolas",15,"bold"),text_color="white",fg_color="red",hover_color="green",
         corner_radius=8).place(x=740,y=432)
-        
         
         submit_button=customtkinter.CTkButton(self.root,text="submit",command=GetPermissionImage,font=("Consolas",35,"bold"),text_color="white",fg_color="green",hover_color="orange",
         corner_radius=8)
         
-        
-    
 class GetPermissionImage:
     
-   
     def __init__(self):
         self.root=root
         for i in self.root.winfo_children():
             i.destroy()
-            
         customtkinter.set_appearance_mode("dark")
         
         T=customtkinter.CTkTextbox(self.root,width=1200,height=450,font=("Consolas",17,"bold"))
         fact="\nDear Customer,\n\n\tIt's an AI based medical cosultant Application. The predition of the machine sometimes givs us the wrong information . so ,we can use only for checking if your are suffering any pain or any diesease , don't waste your time.Immediately consult your doctor befort getting the big problem\n\n\nsome instructions to \" How to use our Application\" \n\n1 . Click on the first button to speak about your symptoms or health condition.\n2 . Once you have provided the necessary details, click on the Second button to get information about the dieases through speech\n3 . Click on the third button to get the prescription in a PDF format, which will be sent to your registered email\n\t\t\n Note:\n\t The application uses AI to provide a diagnosis, but it is not always accurate. Always consult a doctor if you are experiencing pain or any other health-related issues." 
         T.place(x=100,y=100)
         T.insert(tk.END,fact)
-        acc=customtkinter.CTkButton(self.root,text="  Accept  ",font=("Consolas",17,"bold"),text_color="white",fg_color="red",hover_color="green",command=SpeechRecongnition).place(x=970,y=500)
+        accpt_button=customtkinter.CTkButton(self.root,text="  Accept  ",font=("Consolas",17,"bold"),text_color="white",fg_color="red",hover_color="green",command=SpeechRecongnition).place(x=970,y=500)
         
-        ign=customtkinter.CTkButton(self.root,text="  Ignore  ",font=("Consolas",17,"bold"),text_color="white",fg_color="red",hover_color="green",command=root.destroy).place(x=1130,y=500)
-
-       
-           
-       
-        
+        ignore_button=customtkinter.CTkButton(self.root,text="  Ignore  ",font=("Consolas",17,"bold"),text_color="white",fg_color="red",hover_color="green",command=root.destroy).place(x=1130,y=500)
+    
 class SpeechRecongnition:
    
     def __init__(self):
@@ -189,19 +169,17 @@ class SpeechRecongnition:
 
         doc_button = customtkinter.CTkButton(master=root,text="      Tell me what You Feel      ",width=200,height=45,corner_radius=8,font=("Consolas",17,"bold"),hover_color="red",fg_color="green",text_color="white",command=self.speech_symptoms,state=NORMAL).place(x=700,y=450,anchor=CENTER)
 
-        prep_button= customtkinter.CTkButton(master=root,text="       Prescription Advices       ",width=80,height=45,corner_radius=8,font=("Consolas",17,"bold"),hover_color="red",fg_color="green",text_color="white",command=GetDataFromDB,state=NORMAL).place(x=700,y=520,anchor=CENTER)
+        pres_button= customtkinter.CTkButton(master=root,text="       Prescription Advices       ",width=80,height=45,corner_radius=8,font=("Consolas",17,"bold"),hover_color="red",fg_color="green",text_color="white",command=GetDataFromDB,state=NORMAL).place(x=700,y=520,anchor=CENTER)
         
         view_report=customtkinter.CTkButton(master=root,text="        Get Your Reports        ",width=80,height=45,corner_radius=8,font=("Consolas",17,"bold"),hover_color="red",fg_color="green",text_color="white",command=SendingReport,state=NORMAL).place(x=700,y=590,anchor=CENTER)
         
         btn=customtkinter.CTkButton(root,text=" Finish ",fg_color="red",font=("Consolas",17,"bold"),text_color="white",corner_radius=8,hover_color="green",command=root.destroy).place(relx=0.9,rely=0.9,anchor=CENTER)
-    
     
             
     def speech_symptoms(self):
         
         recognizer=spr.Recognizer()
         global result
-        
         with spr.Microphone() as source: 
             print('Clearing background noise...')
             recognizer.adjust_for_ambient_noise(source,duration=1)
@@ -211,17 +189,14 @@ class SpeechRecongnition:
             print('Done recording..') 
         try:
             print('Recognizing..')
-            result = recognizer.recognize_google(audio,language='en')
-            print(result)
+            Dt.result = recognizer.recognize_google(audio,language='en')
+            print(Dt.result)
         except Exception as ex:
             messagebox.showerror("Noise Error","I can't hear your voice")
-       
-               
+          
 class GetDataFromDB():
     
     def __init__(self):
-
-       
         mydb = mysql.connector.connect(
             host="localhost",
             user="root",
@@ -232,7 +207,7 @@ class GetDataFromDB():
         self.getDieases(self.cursor)     
         
     def speech(self):   
-        for st in details:
+        for st in Dt.details:
             engine=pyttsx3.init()
             engine.say(st)
             engine.runAndWait()
@@ -246,19 +221,15 @@ class GetDataFromDB():
        
         for i in cur:
             self.dataDB.append(str(i[0]))
-          
-       
         for item1 in self.dataDB:
-            if item1 in result:
-                dieases.append(item1)
-                
-       
-        for i in dieases:
+            if item1 in Dt.result:
+                Dt.dieases.append(item1)
+        for i in Dt.dieases:
             self.cursor.execute("select * from patients where dieases =\'"+i+"\'")
             for j in self.cursor.fetchall():
-              details.append(j[1])
-              causes.append(j[2])
-              treatment.append(j[3])  
+                Dt.details.append(j[1])
+                Dt.causes.append(j[2])
+                Dt.treatment.append(j[3])  
         self.speech()
            
 
@@ -266,11 +237,11 @@ class SendingReport():
     
     def __init__(self):
       
-        self.dieasesName=self.getString(dieases)
-        self.treatmentName=self.getString(set(treatment))
-        self.causesName=self.getString(causes)
+        self.dieasesName=self.getString(Dt.dieases)
+        self.treatmentName=self.getString(set(Dt.treatment))
+        self.causesName=self.getString(Dt.causes)
         self.detailsName=""
-        for i in details:
+        for i in Dt.details:
             self.detailsName+="\t\t\t\t"+i+"\n"
         self.generateReport()
         self.sendEmailReport()
@@ -282,11 +253,11 @@ class SendingReport():
         return self.str[:len(self.str)]
     def sendEmailReport(self):                 
         sender_mail="arun1772003@gmail.com"
-        receiver_mail=personal[2]
+        receiver_mail=Dt.personal[2]
         sender_password="vnfntyifwsutzrss"
         subject_of_mail="Your Medical Reports"
-        body="Your Medical Report send by AI medical consultant Application which was developed by M.Arunprakash"
-        filename=personal[0][0:len(personal[0])-2]
+        body="Your Medical Report send by Voice based medical consultant Application that was developed by M.Arunprakash"
+        filename=Dt.personal[0][0:len(Dt.personal[0])-1]
         location="C:\\Users\\ELCOT\\Desktop\\project folder\\python\\translator\\NewThing"
 
         k=sendpdf(sender_mail,receiver_mail,sender_password,subject_of_mail,body,filename,location)
@@ -316,7 +287,7 @@ class SendingReport():
         pdf.cell(50,0,txt="Name ",ln=0,align='L')
         pdf.set_text_color(0,255,0)
         pdf.cell(15,0,txt=":",ln=0,align='C')
-        pdf.cell(0,0,txt=personal[0],ln=1,align='L')
+        pdf.cell(0,0,txt=Dt.personal[0],ln=1,align='L')
         pdf.ln(13)
 
         #----------------patient Id------------
@@ -325,7 +296,7 @@ class SendingReport():
         pdf.cell(50,0,txt="Patient ID ",ln=0,align='L')
         pdf.set_text_color(0,255,0)
         pdf.cell(15,0,txt=":",ln=0,align='C')
-        pdf.cell(0,0,txt=str(personal[1]),ln=1,align='L')
+        pdf.cell(0,0,txt=str(Dt.personal[1]),ln=1,align='L')
         pdf.ln(13)
 
        
@@ -369,9 +340,10 @@ class SendingReport():
         pdf.set_font("times",'B',16)
         pdf.multi_cell(180,6,txt=self.treatmentName)
         pdf.ln(13)
-        pdf.output(personal[0][:len(personal[0])-2]+".pdf")
+        pdf.output(Dt.personal[0][:len(Dt.personal[0])-2]+".pdf")
        
             
-root=customtkinter.CTk()
+root = customtkinter.CTk()
+Dt = UserData()
 Login(root)
-root.mainloop()
+root.mainloop()   
